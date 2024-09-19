@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
+import Header from "@/components/header";
+// import AppFont from "@/fonts/app-font";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+import { Lato } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
+import { SocketProvider } from "@/providers/socket";
+
+const lato = Lato({
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -24,11 +23,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="en" className={lato.className}>
+      <body>
+        {/* <AppFont /> */}
+        <SocketProvider>
+          <Header />
+          {children}
+          <Toaster />
+        </SocketProvider>
       </body>
     </html>
   );
