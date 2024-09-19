@@ -1,5 +1,7 @@
+import { type SignalData } from "simple-peer";
+
 export interface CallDetail {
-  signal?: unknown;
+  signal?: string | SignalData;
   from: string;
   name: string;
 }

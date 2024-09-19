@@ -7,6 +7,8 @@ import { requestMediaAudio } from "@/utils/media";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { io } from "socket.io-client";
 
+import Peer, { Instance as PeerInstance } from "simple-peer";
+
 interface SocketProviderProps {
   children: ReactNode;
 }
@@ -15,6 +17,8 @@ const socket = io("http://localhost:5000");
 
 export const SocketProvider = ({ children }: SocketProviderProps) => {
   const { toast } = useToast();
+
+  const [stream, setStream] = useState<MediaStream | undefined>();
   const selfVideoRef = useRef<HTMLVideoElement | null>(null);
   const userVideoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -24,9 +28,12 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
   const [userId, setUserId] = useState<string>("");
 
+  const peerConnectionRef = useRef<PeerInstance | null>(null);
+
   const requestUserMedia = async () => {
     const mediaStream = await requestMediaAudio();
     if (mediaStream) {
+      setStream(mediaStream);
       if (selfVideoRef.current) selfVideoRef.current.srcObject = mediaStream;
     } else {
       toast({
@@ -37,22 +44,60 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   };
 
   const callUser = (to: string) => {
-    socket.emit("call-user", { to, from: userId, name: "Carlitos" });
-
-    socket.on("call-accepted", () => {
-      setIsCallAccepted(true);
+    const peer = new Peer({
+      initiator: true,
+      trickle: false,
+      stream,
     });
+
+    peer.on("signal", (offerSignal) => {
+      socket.emit("call-user", {
+        to,
+        from: userId,
+        name: "Carlitos",
+        signal: offerSignal,
+      });
+    });
+
+    peer.on("stream", (userStream) => {
+      if (userVideoRef.current) userVideoRef.current.srcObject = userStream;
+    });
+
+    socket.on("call-accepted", (answerSignal) => {
+      setIsCallAccepted(true);
+      peer.signal(answerSignal);
+    });
+
+    peerConnectionRef.current = peer;
   };
 
   const answerCall = (from: string) => {
     setIsCallAccepted(true);
-    socket.emit("answer-call", { to: from });
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream,
+    });
+
+    peer.on("signal", (answerSignal) => {
+      socket.emit("answer-call", { to: from, signal: answerSignal });
+    });
+
+    peer.on("stream", (userStream) => {
+      if (userVideoRef.current) userVideoRef.current.srcObject = userStream;
+    });
+
+    peer.signal(callDetail!.signal!);
+    peerConnectionRef.current = peer;
   };
 
   const leaveCall = () => {
     setIsCallEnded(true);
-    // TODO: end call for both connections
-    // socket.emit('call-ended', { to: callDetail.})
+    peerConnectionRef.current?.destroy();
+
+    window.location.reload();
+    // TODO: end call for both connections, join both to a new room and disconnect each from that
+    // socket.emit('call-ended')
   };
 
   useEffect(() => {
