@@ -1,1 +1,5 @@
-export interface CallDetail {}
+export interface CallDetail {
+  signal?: unknown;
+  from: string;
+  name: string;
+}

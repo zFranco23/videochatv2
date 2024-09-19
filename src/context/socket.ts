@@ -1,18 +1,19 @@
-import {
-  createContext,
-  Dispatch,
-  LegacyRef,
-  SetStateAction,
-  useContext,
-} from "react";
+import { CallDetail } from "@/base/types/types";
+import { createContext, LegacyRef, useContext } from "react";
 
 interface SocketState {
-  socket?: any;
+  userId: string;
   selfVideoRef: LegacyRef<HTMLVideoElement | null>;
+  userVideoRef: LegacyRef<HTMLVideoElement | null>;
+  callDetail: CallDetail | undefined;
+  isCallAccepted: boolean;
+  isCallEnded: boolean;
 }
 
 interface SocketActions {
-  socket: Dispatch<SetStateAction<any>>;
+  callUser: (to: string) => void;
+  answerCall: (from: string) => void;
+  leaveCall: () => void;
 }
 
 type SocketContextState = SocketState & SocketActions;
