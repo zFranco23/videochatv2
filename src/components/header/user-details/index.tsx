@@ -24,7 +24,7 @@ const UserDetails = () => {
   };
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-2 items-center hidde">
       <p>
         Room ID : <b>XXXXXXXXXXX</b>
       </p>

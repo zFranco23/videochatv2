@@ -11,12 +11,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "../ui/input";
+import { FiPhone } from "react-icons/fi";
 
 const CallCta = () => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button>Meet someone</Button>
+        <Button>
+          <p className="hidden lg:block">Meet someone</p>
+          <FiPhone className="lg:hidden" />
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="bg-white">
         <AlertDialogHeader>

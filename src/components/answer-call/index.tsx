@@ -23,11 +23,11 @@ const AnswerCall = () => {
     });
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      handleShowAnswerToast();
-    }, 1000);
-  }, [toast]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     handleShowAnswerToast();
+  //   }, 1000);
+  // }, [toast]);
 
   return <></>;
 };
