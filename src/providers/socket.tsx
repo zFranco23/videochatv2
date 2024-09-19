@@ -13,7 +13,7 @@ interface SocketProviderProps {
   children: ReactNode;
 }
 
-const socket = io("http://localhost:5000");
+const socket = io(process.env.NEXT_PUBLIC_HOST_WS ?? "");
 
 export const SocketProvider = ({ children }: SocketProviderProps) => {
   const { toast } = useToast();
