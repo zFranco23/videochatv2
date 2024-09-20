@@ -14,11 +14,13 @@ const UserDetails = () => {
     try {
       await navigator.clipboard?.writeText(userId);
       toast({
+        className: "bg-white",
         title: "Copied!",
       });
     } catch (err) {
       console.error(err);
       toast({
+        className: "bg-white",
         title: "Error copying id",
       });
     }

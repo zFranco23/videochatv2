@@ -49,7 +49,10 @@ const CallCta = () => {
 
         <AlertDialogFooter className="flex gap-2">
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleCallUser}>
+          <AlertDialogAction
+            className="flex items-center gap-2"
+            onClick={handleCallUser}
+          >
             Call
             <FiPhone />
           </AlertDialogAction>

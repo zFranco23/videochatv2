@@ -37,6 +37,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       if (selfVideoRef.current) selfVideoRef.current.srcObject = mediaStream;
     } else {
       toast({
+        className: "bg-white",
         title: "User media not accepted",
         description: "¡Don't forget to allow video and audio!",
       });
