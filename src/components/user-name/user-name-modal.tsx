@@ -20,8 +20,10 @@ const UserNameModal = () => {
   const [name, setName] = useState<string>(userName);
 
   const handleSaveName = () => {
-    setUserName(name);
-    toggleEditNameModal();
+    if (name.trim().length > 0) {
+      setUserName(name);
+      toggleEditNameModal();
+    }
   };
 
   return (
@@ -40,6 +42,7 @@ const UserNameModal = () => {
           <AlertDialogAction
             className="flex items-center gap-2"
             onClick={handleSaveName}
+            disabled={!name}
           >
             Save
           </AlertDialogAction>
