@@ -4,7 +4,13 @@ import { CallDetail } from "@/base/types/types";
 import { SocketContext } from "@/context/socket";
 import { useToast } from "@/hooks/use-toast";
 import { requestMediaAudio } from "@/utils/media";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { io } from "socket.io-client";
 
 import Peer, { Instance as PeerInstance } from "simple-peer";
@@ -22,6 +28,10 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   const selfVideoRef = useRef<HTMLVideoElement | null>(null);
   const userVideoRef = useRef<HTMLVideoElement | null>(null);
 
+  const [isEditNameModalOpen, setIsEditNameModalOpen] = useState<boolean>(true);
+
+  const [receptorName, setReceptorName] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
   const [isCallEnded, setIsCallEnded] = useState<boolean>(false);
   const [isCallAccepted, setIsCallAccepted] = useState<boolean>(false);
   const [callDetail, setCallDetail] = useState<CallDetail | undefined>();
@@ -55,7 +65,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       socket.emit("call-user", {
         to,
         from: userId,
-        name: "Carlitos",
+        name: userName,
         signal: offerSignal,
       });
     });
@@ -64,9 +74,10 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       if (userVideoRef.current) userVideoRef.current.srcObject = userStream;
     });
 
-    socket.on("call-accepted", (answerSignal) => {
+    socket.on("call-accepted", ({ signal, receptor }) => {
+      setReceptorName(receptor);
       setIsCallAccepted(true);
-      peer.signal(answerSignal);
+      peer.signal(signal);
     });
 
     peerConnectionRef.current = peer;
@@ -81,7 +92,11 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     });
 
     peer.on("signal", (answerSignal) => {
-      socket.emit("answer-call", { to: from, signal: answerSignal });
+      socket.emit("answer-call", {
+        to: from,
+        signal: answerSignal,
+        name: userName,
+      });
     });
 
     peer.on("stream", (userStream) => {
@@ -101,6 +116,11 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     // socket.emit('call-ended')
   };
 
+  const toggleEditNameModal = useCallback(
+    () => setIsEditNameModalOpen(false),
+    []
+  );
+
   useEffect(() => {
     requestUserMedia();
   }, []);
@@ -117,6 +137,11 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   return (
     <SocketContext.Provider
       value={{
+        isEditNameModalOpen,
+        toggleEditNameModal,
+        userName,
+        setUserName,
+        receptorName,
         userId,
         selfVideoRef,
         userVideoRef,

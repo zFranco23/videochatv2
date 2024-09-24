@@ -6,6 +6,7 @@ import Header from "@/components/header";
 import { Lato } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { SocketProvider } from "@/providers/socket";
+import UserNameModal from "@/components/user-name/user-name-modal";
 
 const lato = Lato({
   subsets: ["latin"],
@@ -27,6 +28,7 @@ export default function RootLayout({
       <body>
         {/* <AppFont /> */}
         <SocketProvider>
+          <UserNameModal />
           <Header />
           {children}
           <Toaster />

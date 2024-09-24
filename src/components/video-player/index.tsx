@@ -5,14 +5,15 @@ import AnswerCall from "../answer-call";
 import VideoStream from "./video-stream";
 
 const VideoPlayer = () => {
-  const { selfVideoRef, userVideoRef, isCallAccepted } = useSocketContext();
+  const { selfVideoRef, userVideoRef, isCallAccepted, userName, receptorName } =
+    useSocketContext();
   return (
     <div className="flex gap-6 flex-col lg:flex-row items-center justify-center">
       <AnswerCall />
 
-      <VideoStream ref={selfVideoRef} />
+      <VideoStream name={userName} ref={selfVideoRef} />
 
-      {isCallAccepted && <VideoStream ref={userVideoRef} />}
+      {isCallAccepted && <VideoStream name={receptorName} ref={userVideoRef} />}
     </div>
   );
 };
