@@ -1,5 +1,11 @@
 import CallOptions from "@/components/call-options";
 import VideoPlayer from "@/components/video-player";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Videochat WebRTC",
+  description: "Videochat build with webrtc + socket io, and next js.",
+};
 
 const Home = () => {
   return (
