@@ -85,6 +85,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
   const answerCall = (from: string) => {
     setIsCallAccepted(true);
+    setReceptorName(callDetail?.name ?? "");
     const peer = new Peer({
       initiator: false,
       trickle: false,
