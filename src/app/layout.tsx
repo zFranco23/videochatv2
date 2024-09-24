@@ -24,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={lato.className}>
-      <body>
+    <html lang="en">
+      <body className={lato.className}>
         {/* <AppFont /> */}
         <SocketProvider>
           <UserNameModal />

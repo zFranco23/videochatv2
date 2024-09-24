@@ -1,20 +1,20 @@
+"use client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { FiMenu } from "react-icons/fi";
 import UserDetails from "../user-details";
+import { useSocketContext } from "@/context/socket";
 
 export const Menu = () => {
+  const { userName } = useSocketContext();
   return (
     <div className="lg:hidden">
       <Sheet>
@@ -25,7 +25,7 @@ export const Menu = () => {
         </SheetTrigger>
         <SheetContent className="bg-white">
           <SheetHeader>
-            <SheetTitle>Franco xd</SheetTitle>
+            <SheetTitle>{userName}</SheetTitle>
             <SheetDescription>Your menu options</SheetDescription>
           </SheetHeader>
           <div className="grid gap-4 py-4">
